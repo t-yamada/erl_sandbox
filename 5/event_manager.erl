@@ -15,7 +15,7 @@ initialize([{Handler, InitData}|Rest]) ->
 
 stop(Name) ->
   Name ! {stop, self()},
-	receive {reply,Reply} -> Reply end.
+  receive {reply,Reply} -> Reply end.
 
 terminate([]) -> [];
 terminate([{Handler, Data}|Rest]) ->
@@ -40,29 +40,29 @@ handle_msg({add_handler, Handler, InitData}, LoopData) ->
   {ok, [{Handler, Handler:init(InitData)}|LoopData]};
 handle_msg({delete_handler, Handler}, LoopData) ->
   case lists:keysearch(Handler, 1, LoopData) of
-	  false ->
-		  {{error, instance}, LoopData};
-		{value, {Handler, Data}} ->
-		  Reply = {data, Handler:terminate(Data)},
-			NewLoopData = lists:keydelete(Handler, 1, LoopData),
-			{Reply, NewLoopData}
-		end;
+    false ->
+      {{error, instance}, LoopData};
+    {value, {Handler, Data}} ->
+      Reply = {data, Handler:terminate(Data)},
+      NewLoopData = lists:keydelete(Handler, 1, LoopData),
+      {Reply, NewLoopData}
+    end;
 handle_msg({get_data, Handler}, LoopData) ->
   case lists:keysearch(Handler, 1, LoopData) of
-	  false -> {{error, instance}, LoopData};
-		{value, {Handler, Data}} -> {{data, Data}, LoopData}
-	end;
+    false -> {{error, instance}, LoopData};
+    {value, {Handler, Data}} -> {{data, Data}, LoopData}
+  end;
 handle_msg({send_event, Event}, LoopData) ->
   {ok, event(Event, LoopData)};
 handle_msg({swap_handlers, OldHandler, {NewHandler, InitData}}, LoopData) ->
   case lists:keysearch(OldHandler, 1, LoopData) of
-	  false ->
-		  {{error, instance}, LoopData};
-		{value, {OldHandler, Data}} ->
-		  OldHandler:terminate(Data),
-			NewLoopData = [{NewHandler,NewHandler:init(InitData)}|lists:keydelete(OldHandler, 1, LoopData)],
-			{ok, NewLoopData}
-	end.
+    false ->
+      {{error, instance}, LoopData};
+    {value, {OldHandler, Data}} ->
+      OldHandler:terminate(Data),
+      NewLoopData = [{NewHandler,NewHandler:init(InitData)}|lists:keydelete(OldHandler, 1, LoopData)],
+      {ok, NewLoopData}
+  end.
 
 % OldHandler...handler_name , NewHandler...{log_handler,"Filename"}
 
@@ -79,11 +79,11 @@ reply(To, Msg) ->
 
 loop(State) ->
   receive
-	  {request, From, Msg} ->
-		  {Reply, NewState} = handle_msg(Msg, State),
-			reply(From, Reply),
-			loop(NewState);
-		{stop ,From} ->
-		  reply(From, terminate(State))
+    {request, From, Msg} ->
+      {Reply, NewState} = handle_msg(Msg, State),
+      reply(From, Reply),
+      loop(NewState);
+    {stop ,From} ->
+      reply(From, terminate(State))
   end.
 
