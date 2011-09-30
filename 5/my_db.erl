@@ -4,33 +4,33 @@
 
 start() ->
   register(db, spawn(my_db, loop,[[]])),
-	ok.
+  ok.
 
 stop() ->
   db ! stop,
-	ok.
+  ok.
 
 loop(Db) ->
   receive
-	  stop ->
-		  true;
-	  {list,Pid} ->
-		  Pid ! Db,
-			loop(Db);
+    stop ->
+      true;
+    {list,Pid} ->
+      Pid ! Db,
+      loop(Db);
     {write,Key,Element} ->
-		  Db2 = write(Key,Element,Db),
-			loop(Db2);
-		{read,Key,Pid} ->
-		  Pid ! read(Key,Db),
-			loop(Db);
-		{delete,Key} ->
-		  Db2 = delete(Key,Db),
-			loop(Db2);
-		{match,Element,Pid} ->
-		  Pid ! match(Element,Db),
-			loop(Db);
-		_Other ->
-		  loop(Db)
+      Db2 = write(Key,Element,Db),
+      loop(Db2);
+    {read,Key,Pid} ->
+      Pid ! read(Key,Db),
+      loop(Db);
+    {delete,Key} ->
+      Db2 = delete(Key,Db),
+      loop(Db2);
+    {match,Element,Pid} ->
+      Pid ! match(Element,Db),
+      loop(Db);
+    _Other ->
+      loop(Db)
   end.
 
 write(Key, Element) ->
@@ -43,18 +43,18 @@ delete(Key) ->
 
 read(Key) ->
   db ! {read,Key,self()},
-	receive
-	  Elenemt -> {ok,Elenemt}
+  receive
+    Elenemt -> {ok,Elenemt}
   end.
 
 list() ->
   db ! {list,self()},
-	receive
-	  Lst -> {ok,Lst}
+  receive
+    Lst -> {ok,Lst}
   end.
 
 match(Element) ->
   db ! {match,Element,self()},
-	receive
-	  Key -> Key
-	end.
+  receive
+    Key -> Key
+  end.
