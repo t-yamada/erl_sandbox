@@ -1,0 +1,3 @@
+1317, 335279, 101142, raise_alerm, 10, cabinet_open
+1317, 335279, 102032, clear_alerm, 10, cabinet_open
+1317, 335279, 102432, event, 156, link_up

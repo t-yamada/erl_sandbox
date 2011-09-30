@@ -1,0 +1,56 @@
+event_manager:start(alerm, [{log_handler, "AlermLog"}]).
+event_manager:send_event(alerm, {raise_alerm, 10, cabinet_open}).
+event_manager:add_handler(alerm, io_handler, 1).
+event_manager:send_event(alerm, {clear_alerm, 10, cabinet_open}).
+event_manager:send_event(alerm, {event, 156, link_up}).
+event_manager:get_data(alerm, io_handler).
+event_manager:delete_handler(alerm, stats_handler).
+event_manager:stop(alerm).
+
+
+c(event_manager).
+c(io_handler).
+c(log_handler).
+c(stats_handler).
+
+event_manager:start(alerm, [{log_handler, "AlermLog_1"}]).
+event_manager:send_event(alerm, {raise_alerm, 10, cabinet_open}).
+event_manager:add_handler(alerm, io_handler, 1).
+event_manager:send_event(alerm, {clear_alerm, 10, cabinet_open}).
+event_manager:send_event(alerm, {event, 156, link_up}).
+event_manager:delete_handler(alerm, log_handler).
+event_manager:send_event(alerm, {event, 999, hoge}).
+event_manager:add_handler(alerm, log_handler, "AlermLog_2").
+event_manager:send_event(alerm, {event, 888, fuga}).
+event_manager:get_data(alerm, io_handler).
+event_manager:stop(alerm).
+
+c(event_manager).
+c(io_handler).
+c(log_handler).
+c(stats_handler).
+event_manager:start(alerm, [{log_handler, "AlermLog_1"}]).
+event_manager:send_event(alerm, {raise_alerm, 10, cabinet_open}).
+event_manager:add_handler(alerm, io_handler, 1).
+event_manager:send_event(alerm, {clear_alerm, 10, cabinet_open}).
+event_manager:send_event(alerm, {event, 156, link_up}).
+event_manager:swap_handlers(alerm, log_handler, {log_handler,"AlermLog2"}).
+event_manager:send_event(alerm, {event, 999, hoge}).
+event_manager:send_event(alerm, {event, 888, fuga}).
+event_manager:get_data(alerm, io_handler).
+event_manager:stop(alerm).
+
+c(event_manager).
+c(io_handler).
+c(log_handler).
+c(stats_handler).
+
+event_manager:start(alerm, [{log_handler, "AlermLog"}]).
+event_manager:add_handler(alerm, stats_handler, []).
+event_manager:send_event(alerm, {raise_alerm, 10, cabinet_open}).
+event_manager:get_data(alerm, stats_handler).
+event_manager:send_event(alerm, {clear_alerm, 10, cabinet_open}).
+event_manager:get_data(alerm, stats_handler).
+event_manager:send_event(alerm, {event, 156, link_up}).
+event_manager:get_data(alerm, stats_handler).
+event_manager:stop(alerm).
