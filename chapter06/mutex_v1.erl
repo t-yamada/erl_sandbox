@@ -11,7 +11,7 @@ stop() ->
 
 wait() ->
   mutex ! {wait, self()},
-	exit(hogehoge),
+  exit(hogehoge),
   receive ok -> ok end.
 
 signal() ->
@@ -23,38 +23,38 @@ init() ->
 free() ->
   receive
     {wait, Pid} ->
-		  sleep(5000),
-		  % waitを送信したプロセスとlinkさせておく
-		  try_link(Pid),
-			Pid ! ok,
+      sleep(5000),
+      % waitを送信したプロセスとlinkさせておく
+      try_link(Pid),
+      Pid ! ok,
       busy(Pid);
     stop ->
       terminate()
   end.
 
 sleep(Time) ->
-	io:fwrite("sleep start~n",[]),
-	timer:sleep(Time),
-	io:fwrite("sleep end~n",[]).
+  io:fwrite("sleep start~n",[]),
+  timer:sleep(Time),
+  io:fwrite("sleep end~n",[]).
 
 try_link(Pid) ->
   try link(Pid) of
-	  _ -> ok
-	catch
-	  exit:Reason ->
-		  io:fwrite("exit:~w~n",[Reason]),
-			{exit, Reason};
-		error:Error ->
-		  io:fwrite("error:~w~n",[Error]),
-			{error, Error};
-		Other:Others -> {Other, Others}
-	end.
+    _ -> ok
+  catch
+    exit:Reason ->
+      io:fwrite("exit:~w~n",[Reason]),
+      {exit, Reason};
+    error:Error ->
+      io:fwrite("error:~w~n",[Error]),
+      {error, Error};
+    Other:Others -> {Other, Others}
+  end.
 
 busy(Pid) ->
   receive
     {signal, Pid} ->
-		  % waitを送信したプロセスとのリンクを解消する
-			unlink(Pid),
+      % waitを送信したプロセスとのリンクを解消する
+      unlink(Pid),
       free()
   end.
 
